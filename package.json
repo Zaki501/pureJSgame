@@ -1,0 +1,12 @@
+{
+  "name": "purejsgame",
+  "version": "1.0.0",
+  "description": "A game in pure JS (typescript)",
+  "main": "index.js",
+  "scripts": {
+    "build": "tsc",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Zaki501",
+  "license": "ISC"
+}

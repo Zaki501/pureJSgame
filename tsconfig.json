@@ -1,0 +1,14 @@
+{
+	"compilerOptions": {
+	  "outDir": "./build",
+	  "allowJs": false,
+	  "target": "es6",
+	  "removeComments": true,
+	  "alwaysStrict": true,
+	  "noImplicitAny": true,
+	  "strictNullChecks": true,
+	  "strict": true,
+	  "noImplicitReturns": true
+	},
+	"include": ["./src/**/*"]
+  }
