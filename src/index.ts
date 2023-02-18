@@ -1,44 +1,68 @@
-// https://developer.mozilla.org/en-US/docs/Games/Tutorials/2D_Breakout_game_pure_JavaScript/Move_the_ball
+const REFRESH_SPEED = 10;
+const CANVAS = <HTMLCanvasElement>document.getElementById("myCanvas");
+const CTX = CANVAS.getContext("2d");
 
-const canvas = <HTMLCanvasElement>document.getElementById("myCanvas");
-const ctx = canvas.getContext("2d");
+type Point = [x: number, y: number];
+type Displacement = [dx: number, dy: number];
+type Dimensions = [width: number, height: number];
 
-let x = canvas.width / 2;
-let y = canvas.height - 30;
-
-const dx = 2;
-const dy = -2;
-
-function draw(): void {
-  // drawing code
-  ctx?.clearRect(0, 0, canvas.width, canvas.height);
-  ctx?.beginPath();
-  ctx?.arc(x, y, 10, 0, Math.PI * 2);
-  ctx ? ctx.fillStyle = "#0095DD" : null;
-  ctx?.fill();
-  ctx?.closePath();
-
-  x += dx;
-  y += dy;
+interface Circle {
+  radius: number;
+  point: Point;
 }
 
+interface Block {
+  dimensions: Dimensions;
+  point: Point;
+}
 
-setInterval(draw, 10);
+class Ball implements Circle {
+  colour: string;
+  speed: number;
+  radius: number;
+  point: Point;
+  displacement: Displacement;
 
-// ctx?.beginPath(); // Optional Chaining
-// ctx?.rect(20, 40, 20, 20);
-// ctx!.fillStyle = "#FF0000";
-// ctx?.fill();
-// ctx?.closePath();
+  constructor(
+    radius: number,
+    point: Point,
+    displacement: Displacement,
+    colour: string
+  ) {
+    this.point = point;
+    this.radius = radius;
+    this.displacement = displacement;
+    this.colour = colour;
+    this.speed = this.calculate_speed();
+  }
+  update_point(): void {
+    const new_point = <Point>[
+      this.point[0] + this.displacement[0],
+      this.point[1] + this.displacement[1],
+    ];
+    this.point = new_point;
+    return;
+  }
 
-// ctx?.beginPath();
-// ctx?.arc(240, 160, 20, 0, Math.PI * 2, false);
-// ctx!.fillStyle = "green";
-// ctx?.fill();
-// ctx?.closePath();
+  draw(ctx: CanvasRenderingContext2D | null): void {
+    ctx?.beginPath();
+    ctx?.arc(this.point[0], this.point[1], this.radius, 0, Math.PI * 2);
+    ctx ? (ctx.fillStyle = this.colour) : null;
+    ctx?.fill();
+    ctx?.closePath();
+    return;
+  }
+  calculate_speed(): number {
+    //todo
+    return 0;
+  }
+}
 
-// ctx?.beginPath();
-// ctx?.rect(160, 10, 100, 40);
-// ctx!.strokeStyle = "rgba(0, 0, 255, 0.5)";
-// ctx?.stroke();
-// ctx?.closePath();
+function draw(): void {
+  CTX?.clearRect(0, 0, CANVAS.width, CANVAS.height);
+  abc.draw(CTX);
+  abc.update_point();
+}
+
+const abc = new Ball(10, <Point>[100, 100], <Displacement>[2, -2], "#0095DD");
+setInterval(draw, REFRESH_SPEED);

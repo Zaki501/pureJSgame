@@ -1,18 +1,39 @@
 "use strict";
-const canvas = document.getElementById("myCanvas");
-const ctx = canvas.getContext("2d");
-let x = canvas.width / 2;
-let y = canvas.height - 30;
-const dx = 2;
-const dy = -2;
-function draw() {
-    ctx === null || ctx === void 0 ? void 0 : ctx.clearRect(0, 0, canvas.width, canvas.height);
-    ctx === null || ctx === void 0 ? void 0 : ctx.beginPath();
-    ctx === null || ctx === void 0 ? void 0 : ctx.arc(x, y, 10, 0, Math.PI * 2);
-    ctx ? ctx.fillStyle = "#0095DD" : null;
-    ctx === null || ctx === void 0 ? void 0 : ctx.fill();
-    ctx === null || ctx === void 0 ? void 0 : ctx.closePath();
-    x += dx;
-    y += dy;
+const REFRESH_SPEED = 10;
+const CANVAS = document.getElementById("myCanvas");
+const CTX = CANVAS.getContext("2d");
+class Ball {
+    constructor(radius, point, displacement, colour) {
+        this.point = point;
+        this.radius = radius;
+        this.displacement = displacement;
+        this.colour = colour;
+        this.speed = this.calculate_speed();
+    }
+    update_point() {
+        const new_point = [
+            this.point[0] + this.displacement[0],
+            this.point[1] + this.displacement[1],
+        ];
+        this.point = new_point;
+        return;
+    }
+    draw(ctx) {
+        ctx === null || ctx === void 0 ? void 0 : ctx.beginPath();
+        ctx === null || ctx === void 0 ? void 0 : ctx.arc(this.point[0], this.point[1], this.radius, 0, Math.PI * 2);
+        ctx ? (ctx.fillStyle = this.colour) : null;
+        ctx === null || ctx === void 0 ? void 0 : ctx.fill();
+        ctx === null || ctx === void 0 ? void 0 : ctx.closePath();
+        return;
+    }
+    calculate_speed() {
+        return 0;
+    }
 }
-setInterval(draw, 10);
+function draw() {
+    CTX === null || CTX === void 0 ? void 0 : CTX.clearRect(0, 0, CANVAS.width, CANVAS.height);
+    abc.draw(CTX);
+    abc.update_point();
+}
+const abc = new Ball(10, [100, 100], [2, -2], "#0095DD");
+setInterval(draw, REFRESH_SPEED);
