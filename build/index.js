@@ -11,9 +11,36 @@ class Ball {
         this.speed = this.calculate_speed();
     }
     update_point() {
+        const [x, y] = this.point;
+        const [dx, dy] = this.displacement;
+        const r = this.radius;
+        let new_x;
+        let new_y;
+        if (x + dx + r > CANVAS.width) {
+            new_x = CANVAS.width - Math.abs(x + dx - r - CANVAS.width);
+            this.displacement[0] = -this.displacement[0];
+        }
+        else if (x + dx < r) {
+            new_x = Math.abs(x - dx);
+            this.displacement[0] = -this.displacement[0];
+        }
+        else {
+            new_x = this.point[0] + this.displacement[0];
+        }
+        if (y + dy + r > CANVAS.height) {
+            new_y = CANVAS.height - Math.abs(y + dy - r - CANVAS.height);
+            this.displacement[1] = -this.displacement[1];
+        }
+        else if (y + dy < r) {
+            new_y = Math.abs(y - dy);
+            this.displacement[1] = -this.displacement[1];
+        }
+        else {
+            new_y = this.point[1] + this.displacement[1];
+        }
         const new_point = [
-            this.point[0] + this.displacement[0],
-            this.point[1] + this.displacement[1],
+            new_x,
+            new_y,
         ];
         this.point = new_point;
         return;
@@ -31,9 +58,11 @@ class Ball {
     }
 }
 function draw() {
-    CTX === null || CTX === void 0 ? void 0 : CTX.clearRect(0, 0, CANVAS.width, CANVAS.height);
-    abc.draw(CTX);
-    abc.update_point();
+    a1.draw(CTX);
+    a1.update_point();
+    a2.draw(CTX);
+    a2.update_point();
 }
-const abc = new Ball(10, [100, 100], [2, -2], "#0095DD");
+const a1 = new Ball(10, [62, 43], [5, -5], "#0095DD");
+const a2 = new Ball(10, [423, 432], [-5, 5], "#FF00DD");
 setInterval(draw, REFRESH_SPEED);
