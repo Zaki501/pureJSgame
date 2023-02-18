@@ -9,7 +9,10 @@
   },
   "author": "Zaki501",
   "license": "ISC",
-  "dependencies": {
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^5.52.0",
+    "@typescript-eslint/parser": "^5.52.0",
+    "eslint": "^8.34.0",
     "typescript": "^4.9.5"
   }
 }
