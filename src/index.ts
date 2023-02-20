@@ -2,8 +2,17 @@
 // press a button, spawn more balls
 
 const REFRESH_SPEED = 10;
+
 const CANVAS = <HTMLCanvasElement>document.getElementById("myCanvas");
 const CTX = CANVAS.getContext("2d");
+
+const paddleHeight = 10;
+const paddleWidth = 75;
+let paddleX = (CANVAS.width - paddleWidth) / 2;
+let rightPressed = false;
+let leftPressed = false;
+document.addEventListener("keydown", keyDownHandler, false);
+document.addEventListener("keyup", keyUpHandler, false);
 
 type Point = [x: number, y: number];
 type Displacement = [dx: number, dy: number];
@@ -20,7 +29,36 @@ interface Block {
   point: Point;
 }
 
+function drawPaddle(): void {
+  CTX?.beginPath();
+  CTX?.rect(
+    paddleX,
+    CANVAS.height - paddleHeight - 200,
+    paddleWidth,
+    paddleHeight
+  );
+  CTX ? (CTX.fillStyle = "#0095DD") : null;
+  CTX?.fill();
+  CTX?.closePath();
+}
+function keyDownHandler(e: KeyboardEvent): void {
+  if (e.key === "Right" || e.key === "ArrowRight") {
+    rightPressed = true;
+  } else if (e.key === "Left" || e.key === "ArrowLeft") {
+    leftPressed = true;
+  }
+}
+
+function keyUpHandler(e: KeyboardEvent): void {
+  if (e.key === "Right" || e.key === "ArrowRight") {
+    rightPressed = false;
+  } else if (e.key === "Left" || e.key === "ArrowLeft") {
+    leftPressed = false;
+  }
+}
+
 class Ball implements Circle {
+  static list: Array<Ball> = []; // list of all instances -> potential memory leak?
   colour: string;
   speed: number;
   radius: number;
@@ -38,10 +76,9 @@ class Ball implements Circle {
     this.displacement = displacement;
     this.colour = colour;
     this.speed = this.calculate_speed();
+    Ball.list.push(this);
   }
   update_point(): void {
-    // check if (x + dx + radius > CANVAS.width)
-
     const [x, y] = this.point;
     const [dx, dy] = this.displacement;
     const r = this.radius;
@@ -49,7 +86,6 @@ class Ball implements Circle {
     let new_x;
     let new_y;
 
-    // how does this behave at higher displacements?
     if (x + dx + r > CANVAS.width) {
       new_x = CANVAS.width - Math.abs(x + dx - r - CANVAS.width);
       this.displacement[0] = -this.displacement[0];
@@ -69,12 +105,7 @@ class Ball implements Circle {
       new_y = this.point[1] + this.displacement[1];
     }
 
-    const new_point = <Point>[
-      // this.point[0] + this.displacement[0],
-      // this.point[1] + this.displacement[1],
-      new_x,
-      new_y,
-    ];
+    const new_point = <Point>[new_x, new_y];
     this.point = new_point;
     return;
   }
@@ -94,14 +125,26 @@ class Ball implements Circle {
 }
 
 function draw(): void {
-  // CTX?.clearRect(0, 0, CANVAS.width, CANVAS.height);
+  // Clear screen, prep for re-draw
+  CTX?.clearRect(0, 0, CANVAS.width, CANVAS.height);
+
+  // Draw all balls
   a1.draw(CTX);
   a1.update_point();
 
   a2.draw(CTX);
   a2.update_point();
+
+  // Paddle Movement
+  if (rightPressed) {
+    paddleX = Math.min(paddleX + 7, CANVAS.width - paddleWidth);
+  } else if (leftPressed) {
+    paddleX = Math.max(paddleX - 7, 0);
+  }
+  drawPaddle();
 }
 
-const a1 = new Ball(10, <Point>[62, 43], <Displacement>[5, -5], "#0095DD");
+const a1 = new Ball(10, <Point>[62, 43], <Displacement>[2, -2], "#0095DD");
 const a2 = new Ball(10, <Point>[423, 432], <Displacement>[-5, 5], "#FF00DD");
+// console.log(Ball.list)
 setInterval(draw, REFRESH_SPEED);
